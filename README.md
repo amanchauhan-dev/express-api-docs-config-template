@@ -7,6 +7,7 @@ Perfect for quickly bootstrapping new backend projects.
 
 ## 📂 Project Structure
 
+```
 .
 ├── src/
 │ ├── config/ # Configuration (env, logger, db, etc.)
@@ -25,7 +26,7 @@ Perfect for quickly bootstrapping new backend projects.
 ├── package.json
 ├── tsconfig.json
 └── README.md
-
+```
 ---
 
 
