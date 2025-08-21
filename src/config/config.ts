@@ -72,6 +72,11 @@ const envVarsSchema = z.object({
   EMAIL_USER: z.string().optional(),
   EMAIL_PASS: z.string().optional(),
   SENDER_NAME: z.string().optional().default("MY API"),
+  // OAuth - google
+  ACTIVATE_GOOGLE_AUTH: z.enum(["true", "false"]).default("false"),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_URL: z.string(),
 });
 
 // Parse and validate process.env
@@ -139,5 +144,11 @@ export const config = {
     user: envVars.data.EMAIL_USER,
     port: envVars.data.EMAIL_PORT,
     host: envVars.data.EMAIL_HOST,
+  },
+  oauth: {
+    activate: envVars.data.ACTIVATE_GOOGLE_AUTH == "true" ? true : false,
+    secret: envVars.data.GOOGLE_CLIENT_SECRET,
+    clientId: envVars.data.GOOGLE_CLIENT_ID,
+    clientUrl: envVars.data.GOOGLE_CLIENT_URL,
   }
 } as const;

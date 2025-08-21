@@ -4,8 +4,9 @@ import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { config } from '../config/config';
 import { database } from "../config/database"
-import { cleanupExpiredTokens, generateJWTToken, generateRandomToken, revokeUserTokens, saveTokenToDatabase } from 'src/helpers/auth.helpers';
+import { cleanupExpiredTokens, generateJWTToken, generateRandomToken, hashPassword, revokeUserTokens, saveTokenToDatabase, verifyPassword } from '../helpers/auth.helpers';
 import { registerEmail } from '../emails/register.email';
+import { success } from 'zod';
 
 const prisma = database.prisma;
 
@@ -29,7 +30,7 @@ export const register = async (req: Request, res: Response) => {
         }
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, config.bcrypt.saltRounds);
+        const hashedPassword = await hashPassword(password);
 
         // Create user
         const user = await prisma.user.create({
@@ -190,7 +191,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // Verify password
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await verifyPassword(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
                 success: false,
@@ -241,6 +242,20 @@ export const login = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const mydetails = async (req: Request, res: Response) => {
+    if (req.user) {
+        return res.send({
+            success: true,
+            message: "Account details fetched successfully",
+            data: req.user
+        })
+    }
+    return res.status(400).send({
+        success: false,
+        message: "Failed to fetch account details",
+    })
+}
 
 export const refresh = async (req: Request, res: Response) => {
     try {

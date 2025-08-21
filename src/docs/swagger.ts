@@ -3,6 +3,7 @@ import { Application } from "express";
 import authDocs from "./routes/auth.docs";
 import indexDocs from "./routes/index.docs";
 import { config } from "../config/config";
+import oauthDocs from "./routes/oauth.docs";
 
 export const setupSwagger = (app: Application) => {
     const swaggerDocument = {
@@ -51,6 +52,7 @@ export const setupSwagger = (app: Application) => {
         },
         paths: {
             ...indexDocs,
+            ...oauthDocs,
             ...authDocs,
         },
     };

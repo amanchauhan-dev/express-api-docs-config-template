@@ -28,4 +28,5 @@ router.post('/logout', validateRequest(logoutRequestSchema), AuthController.logo
 router.post('/logout-all', validateRequest(logoutRequestSchema), authMiddleware, AuthController.logoutAll);
 router.post('/change-password', authMiddleware, validateRequest(changePasswordRequestSchema), AuthController.changePassword);
 
+router.get('/me', authMiddleware, AuthController.mydetails);
 export default router;

@@ -16,6 +16,9 @@ declare global {
                 name: string;
                 role: string;
                 isActive: boolean;
+                provider: string | null,
+                googleAccessToken: string | null,
+                googleRefreshToken: string | null,
             };
         }
     }
@@ -70,6 +73,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
                         name: true,
                         role: true,
                         isActive: true,
+                        provider: true,
+                        googleAccessToken: true,
+                        googleRefreshToken: true,
                     }
                 }
             }
@@ -155,6 +161,9 @@ export const optionalAuth = async (req: Request, res: Response, next: NextFuncti
                                 name: true,
                                 role: true,
                                 isActive: true,
+                                provider: true,
+                                googleAccessToken: true,
+                                googleRefreshToken: true
                             }
                         }
                     }

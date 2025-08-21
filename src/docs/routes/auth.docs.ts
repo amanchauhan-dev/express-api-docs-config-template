@@ -84,6 +84,16 @@ const authDocs: OpenAPIV3.PathsObject = {
             },
         },
     },
+    [`${basePath}/me`]: {
+        get: {
+            tags,
+            summary: "My details",
+            security: [{ bearerAuth: [] }],
+            responses: {
+                200: { description: "Account details fetched successfully" },
+            },
+        },
+    },
     [`${basePath}/refresh`]: {
         post: {
             tags,

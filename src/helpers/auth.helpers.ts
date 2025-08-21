@@ -3,6 +3,7 @@ import { database } from "../config/database"
 import { config } from '../config/config';
 import { TokenType } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const prisma = database.prisma;
 
@@ -99,3 +100,14 @@ export const revokeUserTokens = async (userId: string, type?: TokenType) => {
         data: { blacklisted: true }
     });
 };
+
+
+
+export const hashPassword = (password: string) => {
+    return bcrypt.hash(password, config.bcrypt.saltRounds)
+}
+
+
+export const verifyPassword = (plain: string, hash: string) => {
+    return bcrypt.compare(plain, hash)
+}

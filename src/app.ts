@@ -11,6 +11,9 @@ import { errorHandler, notFound } from './middleware/error.middleware';
 import { setupSwagger } from './docs/swagger';
 import authRoutes from "./routes/auth.route"
 import { initCronJobs } from './jobs/cron.jobs';
+import oauthRoutes from "./routes/oauth.routes";
+import session from "express-session";
+import passport from "passport";
 import { sendTestEmail } from './controllers/email.controller';
 // Remove bodyParser import - not needed
 
@@ -47,8 +50,7 @@ class App {
     // CORS configuration
     this.app.use(
       cors({
-        origin:
-          config.cors.origin === '*' ? true : config.cors.origin.split(','),
+        origin: "*",
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
@@ -65,6 +67,24 @@ class App {
 
     // Compression middleware
     this.app.use(compression());
+
+    // ======  Google oauth
+    if (config.oauth.activate) {
+      this.app.use(
+        session({
+          secret: process.env.SESSION_SECRET || "supersecret",
+          resave: false,
+          saveUninitialized: false,
+          cookie: {
+            secure: process.env.NODE_ENV === "production",
+            httpOnly: true,
+          },
+        })
+      );
+      this.app.use(passport.initialize());
+      this.app.use(passport.session());
+    }
+    // ======  end:Google oauth
 
     // Logging middleware
     if (config.env === 'production') {
@@ -93,12 +113,15 @@ class App {
       });
     });
     // testv email
-    this.app.post("/test-email", sendTestEmail);
+    if (config.email.activate)
+      this.app.post("/test-email", sendTestEmail);
     // crone jobs
     initCronJobs()
     // API routes
     setupSwagger(this.app);
     this.app.use(`${config.apiPrefix}/auth`, authRoutes);
+    if (config.oauth.activate)
+      this.app.use(`${config.apiPrefix}/oauth`, oauthRoutes);
   }
   // ========================================== Error Handling ====================
 
