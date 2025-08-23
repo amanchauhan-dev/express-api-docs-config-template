@@ -1,4 +1,4 @@
-# 🚀 Express TypeScript Starter Template
+#  Express TypeScript Starter Template
 
 A production-ready **Express.js + TypeScript** starter project with JWT authentication, OAuth (Google), email integration, API documentation (Swagger/OpenAPI), and other best practices baked in.  
 Perfect for quickly bootstrapping new backend projects.
@@ -64,7 +64,14 @@ cp .env.example .env
 Update values like DATABASE_URL, JWT_SECRET, and EMAIL_PASS.
 ```
 
-🚀 Running the Project
+```bash
+# Push database tables
+# Make sure to fill DATABASE_URL in .env
+npx prisma db push
+npx prisma generate # (optional)
+```
+
+Running the Project
 Development
 
 ```bash
